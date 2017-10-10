@@ -1,10 +1,41 @@
 //Cargamos el módulo express
 var express = require('express');
-var app = express();
+var app = express()
+var jwt = require('jwt-simple');
+const tokenSecret = "12345"
 
 var bodyParser = require('body-parser');
 
 app.use(bodyParser.json());
+
+function existeNombreUsuario(nombreUsuario) {
+    knex.where({
+        nombre_usuario: nombreUsuario
+    }).select().table('Usuario').then((usuarios) => {
+        if (usuarios.length > 0) {
+            return true
+        } else {
+            return false
+        }
+    })    
+}
+
+function checkAuth(pet, resp, next) {
+    var token = pet.get('token');
+
+    var decoded = jwt.decode(token, tokenSecret).nombreUsuario
+    
+    knex.where({
+        nombre_usuario: decoded
+    }).select().table('Usuario').then((usuarios) => {
+        if (usuarios.length > 0) {
+            next();
+        } else {
+            resp.status(401);
+            resp.send("Debes autentificarte"); 
+        }
+    });
+}
 
 var knex = require('knex')({
     dialect: 'sqlite3',
@@ -19,18 +50,7 @@ var knex = require('knex')({
     useNullAsDefault: true
   });
 
-
-//Middleware que hace un log del momento en que se ha hecho cada petición
-//También se puede usar en una función, poniendo los mismos parámetros que aquí
-app.use(function (req, res, next) {
-    console.log('Petición en :', Date.now())
-    //LLamamos a next para que se siga ejecutando el resto de middlewares
-    //Si no hiciéramos esto, la respuesta se quedaría pendiente
-    next();
-});
-
-app.route('/usuarios/:nombre_usuario/articulos')
-.get(function(req,res) {
+app.get('/usuarios/:nombre_usuario/articulos', function(req,res) {
     var nombreUsuario = req.params.nombre_usuario
     var body = req.body
     
@@ -45,8 +65,9 @@ app.route('/usuarios/:nombre_usuario/articulos')
         res.status(200)
         res.send(result)
     })
-})
-.post(function(req,res) {
+});
+
+app.post('/usuarios/:nombre_usuario/articulos', checkAuth, function(req, res) {
     var params = req.body
     if (params.nombre && params.cantidad && params.precio) {
         knex('Articulo').insert(
@@ -67,8 +88,7 @@ app.route('/usuarios/:nombre_usuario/articulos')
     }
 });
 
-app.route('/usuarios/:nombre_usuario/articulos/:id')
-.get(function(req,res) {
+app.get('/usuarios/:nombre_usuario/articulos/:id', function(req,res) {
     var nombreUsuario = req.params.nombre_usuario
     var id = req.params.id
     var body = req.body
@@ -90,8 +110,10 @@ app.route('/usuarios/:nombre_usuario/articulos/:id')
         }
     })
     
-})
-.put(function(req,res) {
+});
+
+app.route('/usuarios/:nombre_usuario/articulos/:id')
+.put(checkAuth, function(req,res) {
     var params = req.body
     var nombreUsuario = req.params.nombre_usuario
     var id = req.params.id
@@ -125,7 +147,7 @@ app.route('/usuarios/:nombre_usuario/articulos/:id')
         res.send({error: "faltan parámetros"})
     }
 })
-.delete(function(req,res) {
+.delete(checkAuth,function(req,res) {
     var nombreUsuario = req.params.nombre_usuario
     var id = req.params.id
 
@@ -172,16 +194,29 @@ app.route('/usuarios/:nombre_usuario/favoritos')
 
 //Este método delega en el server.listen "nativo" de Node
 app.listen(3000, function () {
-    lista = new Map() 
-    lista.set(1, {id:1, nombre:"Ron", cantidad:"1 botella"})
-    lista.set(2, {id:2, nombre:"Tomates", cantidad:"1 kg"})
     console.log("Servidor arrancado") 
 });
 
-app.get('/login', function(req, res) {
-    knex.select().table('Usuario').then((usuarios) => {
-        res.status(201)
-        res.send(usuarios[0].nombre_usuario);
-    })
-    
+app.post('/login', function(req, res) {
+    var params = req.body
+    var nombreUsuario = params.nombre_usuario
+    var password = params.pass
+
+    knex.where({
+        nombre_usuario: nombreUsuario
+    }).select().table('Usuario').then((usuarios) => {
+        if (usuarios.length > 0) {
+            if (usuarios[0].pass == password) {
+                var token = jwt.encode({nombreUsuario: nombreUsuario}, tokenSecret);
+                res.status(200)
+                res.send({token : token})
+            } else {
+                res.status(401)
+                res.send({error: "Contraseña incorrecta"})
+            }
+        } else {
+            res.status(401)
+            res.send({error: "Ese usuario no existe"})
+        }
+    })    
 });

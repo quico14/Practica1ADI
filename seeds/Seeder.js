@@ -6,11 +6,11 @@ exports.seed = function(knex, Promise) {
       return knex('sqlite_sequence').update('seq', 0).then(function () {
         return knex('Usuario').insert([
           {nombre_usuario: 'username_prueba', nombre: 'Nombre prueba', apellidos: 'Apellidos prueba', 
-          contraseña: '1'},
+          pass: '1'},
           {nombre_usuario: 'username_prueba2', nombre: 'Nombre prueba2', apellidos: 'Apellidos prueba2', 
-          contraseña: '12' },
+          pass: '12' },
           {nombre_usuario: 'username_prueba3', nombre: 'Nombre prueba3', apellidos: 'Apellidos prueba3', 
-          contraseña: '123' }
+          pass: '123' }
         ]).then(function () {
           return knex('Articulo').insert([
             {nombre: 'articulo prueba', precio: '1,50', cantidad: '1', 
