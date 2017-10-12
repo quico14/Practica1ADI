@@ -13,7 +13,9 @@
     "express": "^4.16.1",
     "jwt-simple": "^0.5.1",
     "knex": "^0.13.0",
-    "sqlite3": "^3.1.13"
+    "sqlite3": "^3.1.13",
+    "swagger-editor": "^3.1.10",
+    "swagger-jsdoc": "^1.9.7"
   },
   "devDependencies": {
     "mocha": "^4.0.1"
