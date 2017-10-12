@@ -108,14 +108,24 @@ app.get('/usuarios/:nombre_usuario/articulos', function(req,res) {
         nombre_usuario: nombreUsuario
     }).select().table('Articulo').then((articulos) => {
         if (articulos.length < 1) {
-            res.status(404)
-            res.send({error: "El recurso especificado no existe"})
+            knex.where({
+                nombre_usuario: nombreUsuario
+            }).select().table('Usuario').then((usuarios) => {
+                if (usuarios.length == 1) {
+                    res.status(200)
+                    res.send("No hay artículos para este usuario")
+                } else {
+                    res.status(404)
+                    res.send({error: "El usuario no existe"})
+                }
+            })
         } else {
             articulos.forEach(function(articulo) {
                 result.push({ID: articulo.ID, nombre: articulo.nombre, precio: articulo.precio, cantidad: articulo.cantidad, 
                     nombreUsuario: articulo.nombreUsuario})
             });
             res.status(200)
+            res.setHeader('Content-Type', 'application/json');
             res.send(result)
         }
     })
@@ -156,6 +166,16 @@ app.get('/swagger.json', function(req, res) {
  *         in: body
  *         required: true
  *         type: float
+ *       - name: token
+ *         description: token para identificar al usuario
+ *         in: header
+ *         required: true
+ *         type: string
+ *       - name: token
+ *         description: token para identificar al usuario
+ *         in: header
+ *         required: true
+ *         type: string
  *     responses:
  *       200:
  *         description: Un artículo.
@@ -182,6 +202,7 @@ app.post('/usuarios/:nombre_usuario/articulos', checkAuth, function(req, res) {
             .returning('ID')
             .then(function (ID) {
             res.status(201)
+            res.setHeader('Content-Type', 'application/json');
             res.location('http://localhost:3000/usuarios/' + req.params.nombre_usuario + '/articulos/' + ID)
             res.send({ID: ID[0], nombre: params.nombre, precio: params.precio, cantidad: params.cantidad, 
                 nombre_usuario: req.params.nombre_usuario})
@@ -235,6 +256,7 @@ app.get('/usuarios/:nombre_usuario/articulos/:id', function(req,res) {
         } else {
             articulos.forEach(function(articulo) {
                 res.status(200)
+                res.setHeader('Content-Type', 'application/json');
                 res.send({ID: articulo.ID, nombre: articulo.nombre, precio: articulo.precio, cantidad: articulo.cantidad, 
                     nombre_usuario: articulo.nombreUsuario})
             });
@@ -277,6 +299,11 @@ app.get('/usuarios/:nombre_usuario/articulos/:id', function(req,res) {
  *         in: body
  *         required: true
  *         type: float
+ *       - name: token
+ *         description: token para identificar al usuario
+ *         in: header
+ *         required: true
+ *         type: string
  *     responses:
  *       200:
  *         description: Un artículo.
@@ -307,6 +334,11 @@ app.get('/usuarios/:nombre_usuario/articulos/:id', function(req,res) {
  *         in: path
  *         required: true
  *         type: integer
+ *       - name: token
+ *         description: token para identificar al usuario
+ *         in: header
+ *         required: true
+ *         type: string
  *     responses:
  *       204:
  *         description: Artículo eliminado correctamente
@@ -348,6 +380,7 @@ app.route('/usuarios/:nombre_usuario/articulos/:id')
                     res.send({error: "El recurso especificado no existe"})
                 } else {
                     res.status(201)
+                    res.setHeader('Content-Type', 'application/json');
                     res.location('http://localhost:3000/usuarios/' + req.params.nombre_usuario + '/articulos/' + ID)
                     res.send({ID: ID[0], nombre: params.nombre, precio: params.precio, cantidad: params.cantidad, 
                         nombre_usuario: req.params.nombre_usuario})
@@ -426,6 +459,7 @@ app.get('/usuarios/:nombre_usuario/favoritos', function(req,res) {
                     usuario_es_favorito: usuario.usuario_es_favorito})
             });
             res.status(200)
+            res.setHeader('Content-Type', 'application/json');
             res.send(result)
         }
     })
@@ -448,6 +482,11 @@ app.get('/usuarios/:nombre_usuario/favoritos', function(req,res) {
  *       - name: favorito
  *         description: Nombre de usuario a agregar a favoritos
  *         in: body
+ *         required: true
+ *         type: string
+ *       - name: token
+ *         description: token para identificar al usuario
+ *         in: header
  *         required: true
  *         type: string
  *     responses:
@@ -511,7 +550,7 @@ app.listen(process.env.PORT || 3000, function () {
  *   post:
  *     tags:
  *       - login
- *     description: Crea un usuario favorito para el usuario especificado
+ *     description: Devuelve el token para poder realizar acciones que lo requiren
  *       - application/json
  *     parameters:
  *       - name: nombre_usuario
@@ -545,6 +584,7 @@ app.post('/login', function(req, res) {
                 if (usuarios[0].pass == password) {
                     var token = jwt.encode({nombreUsuario: nombreUsuario}, tokenSecret);
                     res.status(200)
+                    res.setHeader('Content-Type', 'application/json');
                     res.send({token : token})
                 } else {
                     res.status(401)
