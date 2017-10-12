@@ -3,6 +3,7 @@ var express = require('express');
 var app = express()
 var jwt = require('jwt-simple');
 var swaggerJSDoc = require('swagger-jsdoc')
+var https = require('https')
 
 // swagger definition
 var swaggerDefinition = {
@@ -129,6 +130,57 @@ app.get('/usuarios/:nombre_usuario/articulos', function(req,res) {
             res.send(result)
         }
     })
+});
+
+/**
+ * @swagger
+ * /ebay?busqueda={busqueda}&limite={limite}:
+ *   get:
+ *     tags:
+ *       - Ebay
+ *     description: Busca el artículo especificado en "busqueda" en Ebay, devolviendo tantos artículos como "limite"
+ *     parameters:
+ *       - name: busqueda
+ *         description: Nombre del artículo a buscar
+ *         in: url
+ *         required: true
+ *         type: string
+ *       - name: limite
+ *         description: Número de resultados a devolver
+ *         in: url
+ *         required: true
+ *         type: integer
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: Consultar API Ebay
+ */
+app.get('/ebay', function(req,res) {
+    var busqueda = req.query.busqueda
+    var limite = req.query.limite
+    
+    const options = {
+        hostname: 'api.ebay.com',
+        port: 443,
+        path: '/buy/browse/v1/item_summary/search?&q=' + busqueda + '&limit=' + limite,
+        method: 'GET',
+        headers: {
+          'Authorization' : 'Bearer v^1.1#i^1#p^1#f^0#I^3#r^0#t^H4sIAAAAAAAAAOVXe2wURRjv9aUV6wNRmwbisdWAxd2b3b3H3oY7PVpIT4EW7lq0hNR9zLZL93YvO3O051+liUXFBEuIDzSAKDFoUGooKAkkGBSFkKgBBA0YYyQ+QwgaMQR0du8o10qgQkUS75/LfPPNN9/v9/2+mR3QU15R29fQ93ul54bidT2gp9jjYceBivKyabeUFFeXFYECB8+6nnt7SntLvp+OpJSRFudDlLZMBL3dKcNEomuMUBnbFC0J6Ug0pRREIlbERGzObJFjgJi2LWwplkF54/URCrKcDICmcazCs1AIEat5PmbSilB+VfYD2R8OQA2GZS5A5hHKwLiJsGTiCMUBNkSzgGa5JMeKPCtygAEhfyvlbYE20i2TuDCAirrpiu5auyDXS6cqIQRtTIJQ0XhsVqIxFq+fOTc53VcQK5rnIYElnEHDR3WWCr0tkpGBl94Gud5iIqMoECHKF83tMDyoGDufzBWk71KtgZDCc0ALhXggCWF2TKicZdkpCV86D8eiq7TmuorQxDrOXo5Rwoa8GCo4P5pLQsTrvc7fvIxk6JoO7Qg1c0bssVhTExWdl9EVa7ah082xGVKWbppfTwcCqgBUXlZpgQUSFxIC+V1yofIcj9imzjJV3WEMeedaeAYkKcORxHAFxBCnRrPRjmnYSafQjz9PYJBrdSqaK2EGd5hOUWGKsOB1h5enf2g1xrYuZzAcijBywuUnQknptK5SIyddIea1040iVAfGadHn6+rqYrp4xrLbfRwArO/RObMTSgdMSVTO1+l14q9ffgGtu1AUSFYiXcTZNMmlmwiVJGC2U1EuIIT4YJ734WlFR1r/ZijA7BveDmPVHmEoA5UTVMUvaBIblMeiPaJ5hfqcPKBMpJmS7E6I04akQFohOsukoK2rIh/QOF7QIK0GwxrtD2saLQfUIM1qEAIIZVkJC/+bLhmtzhOKlYZNlqEr2bFS+9gonbfVJsnG2QQ0DGIYreQvChI5IK8RPKfXRwnRiYFIECmtM46wGcVK+SyJnGiOqc3N+qpw6+QmvK6KSgDmkOpq7gpjXLgMWqIwNkRWxia3N9PoHOpJqxOapEuwbRkGtFvYq2JiTI/z/+IovygqxdAJjW3XG7J/ckZeobAlfD1ALu31zL8Amw2AkODnBQFcFbY6t6jJ7DU7sUZZ1QYLYaj+C58evuGvoGiR+2N7PYOg1zNAHlLAB+5ja8Dk8pLm0pKbq5GOIaNLGoP0dpN83NuQ6YTZtKTbxeWehRM3b2wreHetWwSqhl5eFSXsuIJnGJh4YaaMvfXuSjbEApbjWJ7lQCuouTBbyt5VOmF3eOPCHUs/j312oLvi0+PNU/Yf/WAJqBxy8njKioggiraFFf93Z54MrF/TsJ2uOXXb+8apvRsGqjfdeW5nA1j5w9mB27faC1fcE2/9eTC1vn/R178m333l29pndvb51h55bc65WurpbbtfVvutpXtO1300/o6OVU/UTT54yJou/Dn1oVNt9z9eVdvL/PbW2u6fql/8smXxj8WTjreUnoi/QZevtr7ZcmLw3Bn+wQPLb3xzQDz4Trj9veSe1N4jO5KrNx1rrFqZWX44OGlBZ/VLh3ecFChp6t7Tm1//8NmmfYd2LStv7l1To9ZP2Gf/0n/T818ly/ZXba1HfatXPLdhyvHKk+MqP9716va3p43/ZOoysOCFYxO27/siNO0sP9j31NEtx/Yc+ONMxHz4kSDwPDA5V76/APVdwD8RDwAA'
+        }
+      };
+      var data = ''
+      const request = https.request(options, (apiResponse) => {
+        res.status(200)
+        res.contentType('application/json')
+        
+        apiResponse.on('data', chunk => data += chunk.toString());
+        apiResponse.on('end', function () {
+            res.send(data)
+        });
+      }).end()
+      
+      
 });
 
 
