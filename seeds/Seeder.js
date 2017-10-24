@@ -10,7 +10,9 @@ exports.seed = function(knex, Promise) {
           {nombre_usuario: 'username_prueba2', nombre: 'Nombre prueba2', apellidos: 'Apellidos prueba2', 
           pass: '12' },
           {nombre_usuario: 'username_prueba3', nombre: 'Nombre prueba3', apellidos: 'Apellidos prueba3', 
-          pass: '123' }
+          pass: '123' },
+          {nombre_usuario: 'username_prueba4', nombre: 'Nombre prueba4', apellidos: 'Apellidos prueba4', 
+          pass: '1234' }
         ]).then(function () {
           return knex('Articulo').insert([
             {nombre: 'articulo prueba', precio: '1,50', cantidad: '1', 

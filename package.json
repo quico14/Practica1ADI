@@ -19,6 +19,9 @@
     "swagger-jsdoc": "^1.9.7"
   },
   "devDependencies": {
-    "mocha": "^4.0.1"
+    "mocha": "^4.0.1",
+    "superagent": "^3.6.3",
+    "supertest": "^3.0.0",
+    "sys": "0.0.1"
   }
 }
