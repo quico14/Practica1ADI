@@ -134,40 +134,26 @@ app.get('/usuarios/:nombre_usuario/articulos', function(req,res) {
 
 /**
  * @swagger
- * /ebay?busqueda={busqueda}&limite={limite}:
+ * /location:
  *   get:
  *     tags:
- *       - Ebay
- *     description: Busca el artículo especificado en "busqueda" en Ebay, devolviendo tantos artículos como "limite"
- *     parameters:
- *       - name: busqueda
- *         description: Nombre del artículo a buscar
- *         in: url
- *         required: true
- *         type: string
- *       - name: limite
- *         description: Número de resultados a devolver
- *         in: url
- *         required: true
- *         type: integer
+ *       - Google API
+ *     description: Devuelve la geolocalización del usuario
  *     produces:
  *       - application/json
  *     responses:
  *       200:
- *         description: Consultar API Ebay
+ *         description: Consultar API Google
  */
-app.get('/ebay', function(req,res) {
+app.get('/location', function(req,res) {
     var busqueda = req.query.busqueda
     var limite = req.query.limite
     
     const options = {
-        hostname: 'api.ebay.com',
+        hostname: 'www.googleapis.com',
         port: 443,
-        path: '/buy/browse/v1/item_summary/search?&q=' + busqueda + '&limit=' + limite,
-        method: 'GET',
-        headers: {
-          'Authorization' : 'Bearer v^1.1#i^1#I^3#f^0#r^0#p^1#t^H4sIAAAAAAAAAOVXbWwURRjutb3yLWoIGGzCuWgkyO7N7N7ex9q75KBQqqU9uINKFcp+zLVL93bPnTnbI1hrAyQq/BASDURjLRpAMEAUE5QfSsRoghJ/KJrwwxAhlg9FiR+YiM5uj3KtBCpUJPH+XOadd955n+d93pkd0FUxZua6+et+neAZVdrTBbpKPR44Doyp8D5wW1npVG8JKHLw9HTd21XeXfZdFZYzRlZahHDWMjHydWQME0uuMcrkbFOyZKxjyZQzCEtElZLxBXUSzwEpa1vEUi2D8dVWR5mAIsNgGIKgoip8RJap1bwUM2VFmWBI42FEFGWoCXwoFKDzGOdQrYmJbJIowwMYYiFg+UAKAgmEJBjgApFAE+NbgmysWyZ14QATc9OV3LV2Ua5XT1XGGNmEBmFitfF5yYZ4bfXc+lSVvyhWrMBDksgkhweP5lga8i2RjRy6+jbY9ZaSOVVFGDP+WP8Og4NK8UvJXEf6LtUhESm8CGUtqEBNhSPC5DzLzsjk6mk4Fl1j066rhEyik/y1CKVkKCuRSgqjehqittrn/C3MyYae1pEdZebOji+NJxJMbGFOV606Q2cXx2fLeTaxqJoVRS0MNEHRWCoumQ+FxcIu/aEKFA/ZZo5larpDGPbVW2Q2oimjQcSAiCQWEUOdGswGO54mTjrFBPKXCAzDJqeg/RXMkVbTqSnKUBZ87vDa9A+sJsTWlRxBAxGGTrj8RBk5m9U1Zuikq8OCdDpwlGklJCv5/e3t7Vy7wFl2i58HAPofWVCXVFtRhjZiv6/T6x1Yv/YCVnehqIiuxLpE8lmaSwfVKU3AbGFivBgOCcEC74PTig21/s1QhNk/uBtGqjtUQeGVYFgUhBAICrw6Eu0RKyjU7+SBFCrNjGy3IZI1ZBWxKtVZLoNsXZMEMc0L4TRitWAkzQYi6TSriFqQhWmEAEKKokbC/5suGa7Ok6qVRQnL0NX8iKl9RJQu2FpCtkk+iQyDGoYr+SuCxA7ImwXP6fXhQXRiYBpEzuqcI2xOtTJ+S6YnmmNqdrO+Idw6vQhvqaJSgP1Ida3/CuNcuBx+QuVshK2cTS9vrsE51FNWGzJplxDbMgxkL4E3xMTIHuf/wVF+RVSqoVMam281ZP/kjLxOYcvkloBc3u1ZOAAbiiAcFiJBIXBD2Oa4RU3lb96JNbyqzrcwQdq/8OnhH/wIipW4P9jt2Qe6PXvpOwr4wX1wOrinomxxedn4qVgniNPlNIf1FpN+29uIa0P5rKzbpRWeRyv37Gguenb1LAN3DTy8xpTBcUWvMFB5ecYLJ06ZAEMQ8AEIQAgGmsD0y7PlcHL5pA3fP7R7W+MGbmwf8Sb9a/a+WDE6AiYMOHk83hKqh5KPL+C241PWnqvZ+tbv62vebtwy/dBTL63UzmnxTuPQJ2dWngo/vuvYpBPPrT29unlNhXn0g1GNq6Kp98++evr1FT++13b4xC+tq0vf2LzV7OMOb7v91MNVXx2cxfZt+OjOxb3TcGfLybm951Pjv86ebT+7e9LJY6kFM5bbG2cuS3/bd3F5dnRXbOrGiZkj7z5XU3/M25kYezG/6o7eDyv3P3bgeaT0hhI9f/w2vuni8fim+Z8L08681vnyM582ldR9sTP2zYppHfdvmlzN5C68+fNP4xpneffN2H1k5/4du14ILZ355dHOPc9KVaPUeE3D9qd7X4GbFObgO5Lns83M9uVb/lxx5vzdP4iV25+MrT/wYH/5/gIojRwPEA8AAA=='
-        }
+        path: '/geolocation/v1/geolocate?key=AIzaSyCiU9uTR3bph3LjWPPvv3Kl1QcaX8aCfEs',
+        method: 'POST'
       };
       var data = ''
       const request = https.request(options, (apiResponse) => {
