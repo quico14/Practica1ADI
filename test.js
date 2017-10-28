@@ -39,12 +39,13 @@ exec("knex seed:run")
               })
         });
 
-        it ('Búsqueda en Ebay', function(){
+        it ('Geolocalización API Google', function(){
             request
-            .get('http://localhost:3000/ebay?busqueda=drone&limite=2')
+            .get('http://localhost:3000/location')
             .end(function(error, respuesta){                    
                     assert(respuesta.status == 200)
-                    assert(respuesta.body.itemSummaries.length == 2)
+                    var accuracy = respuesta.body.accuracy
+                    assert(respuesta.body.accuracy)
               })
         });
 
