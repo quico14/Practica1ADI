@@ -15,17 +15,17 @@ exports.seed = function(knex, Promise) {
           pass: '1234' }
         ]).then(function () {
           return knex('Articulo').insert([
-            {nombre: 'articulo prueba', precio: '1,50', cantidad: '1', 
+            {nombre: 'articulo prueba', precio: '150', cantidad: '1', 
             nombre_usuario: 'username_prueba'},
-            {nombre: 'Samsung Galaxy S8', precio: '600,64', cantidad: '25', 
+            {nombre: 'Samsung Galaxy S8', precio: '600', cantidad: '25', 
             nombre_usuario: 'username_prueba'},
             {nombre: 'Oneplus 5T', precio: '456', cantidad: '24', 
             nombre_usuario: 'username_prueba'},
             {nombre: 'PS4 PRO', precio: '367', cantidad: '23', 
             nombre_usuario: 'username_prueba'},
-            {nombre: 'articulo prueba2', precio: '2,50', cantidad: '2', 
+            {nombre: 'articulo prueba2', precio: '20', cantidad: '2', 
             nombre_usuario: 'username_prueba2'},
-            {nombre: 'articulo prueba3', precio: '3,50', cantidad: '3', 
+            {nombre: 'articulo prueba3', precio: '30', cantidad: '3', 
             nombre_usuario: 'username_prueba3'}
           ])
         }).then(function (){
