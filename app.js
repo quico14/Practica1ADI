@@ -5,6 +5,10 @@ var jwt = require('jwt-simple');
 var swaggerJSDoc = require('swagger-jsdoc')
 var https = require('https')
 
+var cors = require('cors')
+//Suponiendo "app" la variable obtenida como app=express()
+app.use(cors())
+
 // swagger definition
 var swaggerDefinition = {
     info: {
@@ -114,7 +118,7 @@ app.get('/usuarios/:nombre_usuario/articulos', function(req,res) {
             }).select().table('Usuario').then((usuarios) => {
                 if (usuarios.length == 1) {
                     res.status(200)
-                    res.send("No hay artículos para este usuario")
+                    res.send({message: "No hay artículos para este usuario"})
                 } else {
                     res.status(404)
                     res.send({error: "El usuario no existe"})
@@ -417,7 +421,7 @@ app.route('/usuarios/:nombre_usuario/articulos/:id')
                     res.status(404)
                     res.send({error: "El recurso especificado no existe"})
                 } else {
-                    res.status(201)
+                    res.status(204)
                     res.setHeader('Content-Type', 'application/json');
                     res.location('http://localhost:3000/usuarios/' + req.params.nombre_usuario + '/articulos/' + id)
                     res.send({ID: id, nombre: params.nombre, precio: params.precio, cantidad: params.cantidad, 
