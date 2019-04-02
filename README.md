@@ -1,15 +1,15 @@
 # Practica1ADI
 
-Realizada por Quico Llinares Llorens.
+Done by Quico Llinares Llorens.
 
-### Enlace API en Heroku
+### Link Heroku's API 
 
-[API en Heroku](https://blooming-tundra-62951.herokuapp.com/)
+[Heroku's API](https://blooming-tundra-62951.herokuapp.com/)
 
-### Correr seeders
-Ejecutar desde la terminal en la raíz del proyecto `knex seed:run`
-Con los seeders tendremos lo siguiente en la base de datos:
-## Tabla Usuarios
+### Run seeders
+run from terminal in the project's root `knex seed:run`
+With the seeders we will have the following in the DB.
+## Usuarios (users) Table
 |nombre_usuario|nombre|apellidos|password|
 |--|--|--|--|
 |username_prueba| Nombre prueba | Apellidos prueba | 1 |
@@ -17,7 +17,7 @@ Con los seeders tendremos lo siguiente en la base de datos:
 |username_prueba3| Nombre prueba3 | Apellidos prueba3 | 123 |
 |username_prueba4| Nombre prueba4 | Apellidos prueba4 | 1234 |
 
-## Tabla Articulos
+## Articulos (articles) Table
 |nombre|precio|cantidad|nombre_usuario|
 |--|--|--|--|
 |articulo prueba| 1,50 | 1 | 1 |
@@ -25,7 +25,7 @@ Con los seeders tendremos lo siguiente en la base de datos:
 |articulo prueba2| 2,50 | 2 | username_prueba2 |
 |articulo prueba3| 3,50 | 3 | username_prueba3 |
 
-## Tabla Favoritos
+## Favoritos (favourites) Table
 |usuario_tiene_favorito|usuario_es_favorito|
 |--|--|
 |username_prueba| username_prueba3 |
@@ -33,17 +33,17 @@ Con los seeders tendremos lo siguiente en la base de datos:
 |username_prueba2| username_prueba |
 
 
-### Correr en local
-- Descargar repositorio.
-- Ejecutar `npm install`.
-- Ejecutar `node app.js`
-- Acceder desde el navegador a `localhost:3000`
+### Run locally
+- Download repository.
+- Execute `npm install`.
+- Execute `node app.js`
+- Access from the browser to `localhost:3000`
 
-### Correr tests
-Ejecutar desde la terminal en la raíz del proyecto `./node_modules/.bin/mocha`
-Al inicio de los tests se corre el seeder.
+### Run tests
+Run from the terminal in project's root `./node_modules/.bin/mocha`
+In the `init` of tests seeders are run.
 
-Todos los endpoints están definidos en la `documentación` del API, la cual se encuentra en la ruta base del API.
+All endpoints are defined in the API `documentation`, available in the base path of the API.
 
-### Documentación
-La documentación de los casos de uso, relaciones entre tablas, y casos de uso que se satisfacen se puede encontrar en el archivo `Diseño API.pdf`
+### Documentation
+Documentation from use cases, tables relationship and satisfied use cases can be found in the file `Diseño API.pdf`
